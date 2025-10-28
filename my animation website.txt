@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HAJRA JAVED - PORTFOLIO</title>
+  <style>
+    /* Your full CSS exactly as provided */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: gilroy; }
+    @font-face {
+      font-family: gilroy;
+      src: url(./font/Gilroy-Regular.ttf);
+      font-weight: normal;
+      font-style: normal;
+    }
+    html, body {: 100%; }
+    #main { position: relative; overflow: hidden; }
+    #page, #page1, #page2, #page3 {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+      background-color: #f1f1f1;
+    }
+    canvas {
+      position: relative;
+      z-index: 9;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+    #loop {
+      display: flex;
+      position: absolute;
+      top: 30%;
+      height: 25%;
+      width: 100%;
+      font-size: 80px;
+      white-space: nowrap;
+    }
+    #loop > h1 {
+      font-weight: 400;
+      animation: anim 22s linear infinite;
+    }
+    #loop > h1 > b { font-weight: 900; }
+    #loop > h1 > span {
+      -webkit-text-stroke: 2.2px black;
+      color: transparent;
+      font-weight: 500;
+    }
+    @keyframes anim {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+    #nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 7%;
+      width: 100%;
+      position: fixed;
+      z-index: 9;
+      padding: 0 30px;
+    }
+    #nav > h3 { font-weight: 400; font-size: 25px; }
+    #nav > h3 > span {
+      -webkit-text-stroke: 0.6px black;
+      color: transparent;
+      font-weight: 500;
+    }
+    #nav > button {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      border-radius: 50px;
+      background-color: #000;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #nav > button:hover { background-color: #444; }
+    #nav > button > img {
+      margin-right: 8px;
+      width: 22px;
+      height: 22px;
+    }
+    #page > h3 {
+      position: absolute;
+      top: 62%;
+      left: 2%;
+      font-weight: 400;
+      color: #5d5d5d;
+    }
+    #page > h4 {
+      position: absolute;
+      top: 75%;
+      left: 23%;
+      font-weight: 400;
+      color: #5d5d5d;
+    }
+    #page1 #right-text h3,
+    #page2 #right-text h3,
+    #page3 #right-text h3 {
+      position: absolute;
+      top: 25%;
+      left: 8%;
+      font-weight: 500;
+      color: #5d5d5d;
+    }
+    #page1 #right-text h1,
+    #page2 #right-text h1,
+    #page3 #right-text h1 {
+      position: absolute;
+      top: 29%;
+      left: 8%;
+      font-weight: 900;
+    }
+    #page1 #right-text h1 span,
+    #page2 #right-text h1 span,
+    #page3 #right-text h1 span {
+      display: inline-flex;
+      color: #f1f1f1;
+      background-color: #000;
+      margin-bottom: 10px;
+      padding: 3px 10px;
+    }
+    #page1 #left-text h1 {
+      position: absolute;
+      top: 56%;
+      right: 8%;
+      font-weight: 900;
+      text-align: end;
+    }
+    #page1 #left-text h1 span {
+      display: inline-flex;
+      color: #f1f1f1;
+      background-color: #000;
+      margin-bottom: 10px;
+      padding: 3px 10px;
+      text-align: end;
+    }
+    #page1 #left-text h3 {
+      position: absolute;
+      top: 78%;
+      right: 8%;
+      font-weight: 500;
+      color: #5d5d5d;
+    }
+    #page2 #left-text p,
+    #page3 #left-text p {
+      position: absolute;
+      top: 55%;
+      right: 5%;
+      font-weight: 500;
+      color: #5d5d5d;
+      text-align: end;
+    }
+    #page2 #left-text p { top: 58%; }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css" />
+</head>
+<body>
+  <div id="nav">!
+    <h3><b>HAJRA</b><span>JAVED</span></h3>
+    <a href="https://github.com/harshitv54" target="_self">
+      <button id="github">
+        <img src="./images/my (4).png" alt="GitHub logo" /> My GitHub
+      </button>
+    </a>
+  </div>
+<div id="main">
+    <div id="page">
+      <div id="loop">
+        <h1><b>Crafting code,</b><span>shaping dreams—</span> I'm <b><i>Hajra,</i></b> <span>turning passion</span> into <span><i>pixels.</i></span>.</h1>&nbsp;&nbsp;
+        <h1><b>Crafting code,</b><span>shaping dreams—</span> I'm <b><i>Hajra,</i></b> <span>turning passion</span> into <span><i>pixels.</i></span>.</h1>&nbsp;&nbsp;
+        <h1><b>Crafting code,</b><span>shaping dreams—</span> I'm <b><i>Hajra,</i></b> <span>turning passion</span> into <span><i>pixels.</i></span>.</h1>&nbsp;&nbsp;
+        <h1><b>Crafting code,</b><span>shaping dreams—</span> I'm <b><i>Hajra,</i></b> <span>turning passion</span> into <span><i>pixels.</i></span>.</h1>&nbsp;&nbsp;
+      </div>
+      <h3>A PROJECT MADE BY ME TO PRACTICE AND LEARN NEW THINGS <br> ABOUT CSS, HTML AND JAVASCRIPT AND TAKE MORE <br> CHALLENGES BECAUSE YOU LEARN WHEN YOU <br> DO IT YOURSELF. HOPE YOU LIKED MY WORK.</h3>
+      <h4>...SCROLL TO READ</h4>
+      <canvas id="background-canvas"></canvas>
+    </div>
+
+    <div id="page1">
+      <div id="right-text">
+        <h3>HAJRA JAVED / KEY WORD</h3>
+        <h1><span>Fueled by curiosity,</span><br><span>driven by passion—</span><br><span>coding my way to brighter horizons.</span></h1>
+      </div>
+      <div id="left-text">
+        <h1><span>INNOVATION</span><br><span>BEGINS</span><br><span>WITH HAJRA</span></h1>
+        <h3>...LUCIFER</h3>
+      </div>
+    </div>
+
+    <div id="page2">
+      <div id="right-text">
+        <h3>HAJRA JAVED / HAVE FUN</h3>
+        <h1><span>Where creativity meets functionality,</span><br><span>you'll find my work as a</span><br><span>web developer.</span></h1>
+      </div>
+      <div id="left-text">
+        <p>Hi, I’m Hajra Javed, a self-taught web developer<br>passionate about creating functional and <br>beautiful websites. I’m driven by curiosity<br>and a love for learning as I transform my<br>passion into expertise.</p>
+      </div>
+    </div>
+
+    <div id="page3">
+      <div id="right-text">
+        <h3>HAJRA JAVED / MOTIVE</h3>
+        <h1><span>CODING PASSIONS,</span><br><span>CREATING MAGIC-</span><br><span>HAJRA</span></h1>
+      </div>
+      <div id="left-text">
+        <p>LEARNING IS A BEAUTIFUL PROCESS THAT ENRICHES OUR LIVES IN <br> MANY WAYS. IT EXPANDS OUR HORIZONS, BROADENS OUR PERSPECTIVES,<br> AND EMPOWERS US TO ACHIEVE OUR GOALS. LEARNING CAN HELP US DISCOVER  <br> NEW TALENTS, SKILLS, AND INTERESTS THAT WE NEVER KNEW WE HAD. IT <br> CAN  ALSO ENHANCE OUR CREATIVITY, CRITICAL THINKING, <br>  AND PROBLEM-SOLVING ABILITIES.</p>
+      </div>
+    </div>
+  </div>
+<!-- External JS Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+
+  <!-- Embedded JavaScript -->
+  <script>
+    function locomotive() {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const locoScroll = new LocomotiveScroll({
+        el: document.querySelector("#main"),
+        smooth: true,
+      });
+
+      locoScroll.on("scroll", ScrollTrigger.update);
+
+      ScrollTrigger.scrollerProxy("#main", {
+        scrollTop(value) {
+          return arguments.length
+            ? locoScroll.scrollTo(value, 0, 0)
+            : locoScroll.scroll.instance.scroll.y;
+        },
+        getBoundingClientRect() {
+          return {
+            top: 0,
+            left: 0,
+            width: window.innerWidth,
+            height: window.innerHeight,
+          };
+        },
+        pinType: document.querySelector("#main").style.transform
+          ? "transform"
+          : "fixed",
+      });
+
+      ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
+      ScrollTrigger.refresh();
+    }
+    locomotive();
+
+    // Canvas setup
+    const canvas = document.getElementById("background-canvas");
+    const context = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      render();
+    });
+
+    // Generate image paths dynamically
+    function files(index) {
+      const number = String(index + 1).padStart(4, "0");
+      return `./images/male${number}.png`;
+    }
+
+    const frameCount = 300;
+    const images = [];
+    const imageSeq = { frame: 0 };
+
+    // Preload all 300 images
+    for (let i = 0; i < frameCount; i++) {
+      const img = new Image();
+      img.src = files(i);
+      img.onerror = () => console.warn(`Image failed to load: ${img.src}`);
+      images.push(img);
+    }
+
+    // Animate image sequence on scroll
+    gsap.to(imageSeq, {
+      frame: frameCount - 1,
+      snap: "frame",
+      ease: "none",
+      scrollTrigger: {
+        scrub: 0.15,
+        trigger: "#page>canvas",
+        start: "top top",
+        end: "600% top",
+        scroller: "#main",
+      },
+      onUpdate: render,
+    });
+
+    // Initial render after first image loads
+    images[0].onload = render;
+
+    function render() {
+      scaleImage(images[imageSeq.frame], context);
+    }
+
+    function scaleImage(img, ctx) {
+      const canvas = ctx.canvas;
+      const hRatio = canvas.width / img.width;
+      const vRatio = canvas.height / img.height;
+      const ratio = Math.max(hRatio, vRatio);
+      const centerShift_x = (canvas.width - img.width * ratio) / 2;
+      const centerShift_y = (canvas.height - img.height * ratio) / 2;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        img.width,
+        img.height,
+        centerShift_x,
+        centerShift_y,
+        img.width * ratio,
+        img.height * ratio
+      );
+    }
+
+    // Pin canvas section
+    ScrollTrigger.create({
+      trigger: "#page>canvas",
+      pin: true,
+      scroller: "#main",
+      start: "top top",
+      end: "600% top",
+    });
+
+    // Pin each page section
+    ["#page1", "#page2", "#page3"].forEach((id) => {
+      gsap.to(id, {
+        scrollTrigger: {
+          trigger: id,
+          start: "top top",
+          end: "bottom top",
+          pin: true,
+          scroller: "#main",
+        },
+      });
+    });
+
+    // GitHub button click
+    const gitHubButton = document.getElementById("github");
+    gitHubButton.onclick = () => {
+      window.open("https://github.com/harshitv54", "_self");
+    };
+  </script>
+</body>
+</html>

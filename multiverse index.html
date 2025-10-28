@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiverse Velocity Navigator</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- CORE STYLING & CURSOR --- */
+        body {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'><text x='12' y='18' font-size='20' text-anchor='middle'>🚀</text></svg>") 16 16, auto;
+            font-family: 'Inter', sans-serif;
+            background-color: #030712;
+            scroll-behavior: smooth;
+        }
+
+        /* --- JOURNEY SECTIONS --- */
+        .journey-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 2rem;
+            position: relative;
+            z-index: 10; /* Keep content above the animated stars */
+        }
+        
+        /* --- STARFIELD BACKGROUND ANIMATION --- */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Create the initial star effect using pseudo-elements */
+        .starfield::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3000px;
+            height: 3000px;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAACXBIWXMAAAHXAAAB1wB8xO6MAAAAYFBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8X3hSjAAAAIChJREFUeNrtzbENwDAIQFFH/f+fHYmYgKk5gE8Gf4t1fS72j6c+sB0k7l86B/l2sP5QO0j8TfsP0D6L7U+yA6S9l87B/l2s/49uRwgXpXJ7kIAAAAASUVORK5CYII=') repeat;
+            background-size: 100px 100px;
+            animation: move-starfield 240s linear infinite;
+        }
+
+        @keyframes move-starfield {
+            from {
+                transform: translate(0, 0);
+            }
+            to {
+                /* Simulate movement by shifting the background origin */
+                transform: translate(-1500px, -1500px);
+            }
+        }
+
+        /* --- VELOCITY INDICATOR HUD --- */
+        #velocity-hud {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 50;
+            background-color: rgba(17, 24, 39, 0.85); /* Dark background */
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(156, 163, 175, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        #progress-bar {
+            transition: width 0.5s ease-out, background-color 0.5s ease-out;
+            height: 100%;
+        }
+
+        .journey-card {
+            background-color: rgba(17, 24, 39, 0.9);
+            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+            border: 2px solid;
+            transition: all 0.5s ease-in-out;
+        }
+        
+        /* Specific glow colors for each stage */
+        #stage-earth .journey-card { border-color: #10b981; } /* Green */
+        #stage-space .journey-card { border-color: #6366f1; } /* Indigo */
+        #stage-galaxy .journey-card { border-color: #ec4899; } /* Pink */
+        #stage-universe .journey-card { border-color: #f59e0b; } /* Amber */
+        #stage-multiverse .journey-card { 
+            border-color: #a855f7; /* Purple */
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { border-color: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.8); }
+            50% { border-color: #f43f5e; box-shadow: 0 0 30px rgba(244, 63, 94, 0.8); }
+            100% { border-color: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.8); }
+        }
+
+        /* Responsive adjustments for HUD */
+        @media (max-width: 768px) {
+            #velocity-hud {
+                top: auto;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                width: 100%;
+                border-radius: 0;
+                padding: 0.5rem 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                border-top: 1px solid rgba(156, 163, 175, 0.3);
+                border-bottom: none;
+            }
+            #progress-display { display: none; } /* Hide text on small screens */
+            #progress-bar-container { width: 70%; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Animated Starfield Background -->
+    <div class="starfield"></div>
+
+    <!-- Cosmic Velocity Indicator (Fixed HUD) -->
+    <div id="velocity-hud" class="fixed p-4 rounded-xl flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+        <div id="progress-display" class="text-xs font-semibold uppercase tracking-widest text-gray-400">
+            Current Stage: <span id="stage-name" class="text-white">Earth</span>
+        </div>
+        <div id="progress-bar-container" class="w-40 h-3 bg-gray-700 rounded-full overflow-hidden">
+            <div id="progress-bar" class="w-0 bg-green-500 rounded-full"></div>
+        </div>
+        <div class="text-sm font-mono text-gray-300">
+            Velocity: <span id="velocity-value">0%</span>
+        </div>
+    </div>
+
+
+    <!-- Stage 1: Earth / Sub-Light Travel -->
+    <section id="stage-earth" class="journey-section">
+        <div class="journey-card text-center max-w-2xl p-10 rounded-2xl">
+            <h1 class="text-6xl font-extrabold mb-4 text-green-400 uppercase tracking-wider">Earth Orbit</h1>
+            <h2 class="text-3xl font-light mb-6 text-gray-300">Phase 01: Sub-Light Departure</h2>
+            <p class="text-lg text-gray-100">
+                The initial lift-off. We depart the familiar confines of our planet's atmosphere and local star system. Our speed is nominal, but the journey has begun. We are on the edge of the known universe.
+            </p>
+            <div class="scroll-indicator mt-8 text-green-400">
+                <p class="text-xl">Initiate Jump</p>
+                <span class="text-4xl block mt-1">⬇️</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stage 2: Outer Space / Warp Drive Activation -->
+    <section id="stage-space" class="journey-section">
+        <div class="journey-card text-center max-w-2xl p-10 rounded-2xl">
+            <h1 class="text-6xl font-extrabold mb-4 text-indigo-400 uppercase tracking-wider">Deep Space</h1>
+            <h2 class="text-3xl font-light mb-6 text-gray-300">Phase 02: Warp Drive Engagement</h2>
+            <p class="text-lg text-gray-100">
+                The laws of physics begin to bend as we activate the warp drive. Distant stars stretch into vibrant streaks. We are now traveling faster than light, leaving our galaxy behind in moments.
+            </p>
+            <div class="scroll-indicator mt-8 text-indigo-400">
+                <p class="text-xl">Intergalactic Transit</p>
+                <span class="text-4xl block mt-1">⬇️</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stage 3: Galaxy / Intergalactic Drift -->
+    <section id="stage-galaxy" class="journey-section">
+        <div class="journey-card text-center max-w-2xl p-10 rounded-2xl">
+            <h1 class="text-6xl font-extrabold mb-4 text-pink-400 uppercase tracking-wider">Intergalactic Void</h1>
+            <h2 class="text-3xl font-light mb-6 text-gray-300">Phase 03: Boundary Breach</h2>
+            <p class="text-lg text-gray-100">
+                The vast, cold darkness between galaxies. Our universe appears as a single, diminishing cluster of light behind us. We are preparing to pierce the very fabric of reality to reach the next cosmic bubble.
+            </p>
+            <div class="scroll-indicator mt-8 text-pink-400">
+                <p class="text-xl">Cosmic String Approach</p>
+                <span class="text-4xl block mt-1">⬇️</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stage 4: Universe / Void Traversal -->
+    <section id="stage-universe" class="journey-section">
+        <div class="journey-card text-center max-w-2xl p-10 rounded-2xl">
+            <h1 class="text-6xl font-extrabold mb-4 text-yellow-400 uppercase tracking-wider">The Void</h1>
+            <h2 class="text-3xl font-light mb-6 text-gray-300">Phase 04: Traversing Cosmic Voids</h2>
+            <p class="text-lg text-gray-100">
+                Existence becomes abstract. We see ripples of space-time and hints of other realities bleeding through. We are no longer limited by the known physical constants of our home universe.
+            </p>
+            <div class="scroll-indicator mt-8 text-yellow-400">
+                <p class="text-xl">Final Nexus Jump</p>
+                <span class="text-4xl block mt-1">⬇️</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stage 5: Multiverse - Infinite Realities -->
+    <section id="stage-multiverse" class="journey-section">
+        <div class="journey-card text-center max-w-2xl p-12 rounded-3xl text-gray-900 bg-white">
+            <h1 class="text-7xl font-black mb-6 text-purple-700 uppercase">Multiverse Nexus</h1>
+            <h2 class="text-4xl font-extrabold mb-8 text-indigo-900">Phase 05: Infinite Possibility Achieved</h2>
+            <p class="text-xl font-medium mb-6">
+                <span class="text-5xl block my-4">♾️</span>
+                We have arrived at the junction of infinite realities. Here, time and space hold no meaning. Every possible outcome of every decision exists simultaneously. The journey concludes, but the observation of infinity begins.
+            </p>
+            <a href="#stage-earth" class="mt-8 inline-block px-8 py-4 bg-purple-600 text-white font-bold rounded-full shadow-lg hover:bg-purple-700 transition duration-300 transform hover:scale-105 uppercase tracking-wider">
+                Re-Calibrate & Restart 🔄
+            </a>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.getElementById('progress-bar');
+            const velocityValue = document.getElementById('velocity-value');
+            const stageName = document.getElementById('stage-name');
+            const sections = [
+                { id: 'stage-earth', name: 'Earth Departure', color: 'bg-green-500' },
+                { id: 'stage-space', name: 'Warp Drive', color: 'bg-indigo-500' },
+                { id: 'stage-galaxy', name: 'Intergalactic', color: 'bg-pink-500' },
+                { id: 'stage-universe', name: 'Cosmic Void', color: 'bg-yellow-500' },
+                { id: 'stage-multiverse', name: 'Multiverse Nexus', color: 'bg-purple-500' }
+            ];
+
+            const handleScroll = () => {
+                const totalHeight = document.body.scrollHeight - window.innerHeight;
+                const scrollProgress = window.scrollY;
+
+                // Calculate journey percentage
+                const percentage = Math.min(100, Math.round((scrollProgress / totalHeight) * 100));
+
+                // Update Progress Bar
+                progressBar.style.width = `${percentage}%`;
+                velocityValue.textContent = `${percentage}%`;
+
+                // Determine current stage and update color/name
+                let currentStage = sections[0];
+                let maxScrollForCurrentStage = 0;
+
+                sections.forEach((section, index) => {
+                    const el = document.getElementById(section.id);
+                    if (!el) return;
+
+                    const rect = el.getBoundingClientRect();
+                    // Check if the top of the section is visible in the top half of the screen
+                    if (rect.top <= (window.innerHeight / 2) && rect.bottom > (window.innerHeight / 2)) {
+                        currentStage = section;
+                    }
+
+                    // Remove old colors and apply new color to progress bar
+                    progressBar.classList.remove(...sections.map(s => s.color));
+                    progressBar.classList.add(currentStage.color);
+                    stageName.textContent = currentStage.name;
+                });
+            };
+
+            // Set up event listener
+            window.addEventListener('scroll', handleScroll);
+            // Run once on load to initialize HUD
+            handleScroll(); 
+        });
+    </script>
+</body>
+</html>
