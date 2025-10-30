@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercis4</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      /* Flex CSS */
+      :root {
+        --hajra: rgb(238, 78, 78);
+        --maryam: rgb(56, 200, 202);
+        --bilal: rgb(119, 28, 93);
+        --azkah: rgb(242, 169, 240);
+        --azku: rgb(245, 153, 153);
+        --harry: rgb(206, 201, 201);
+        --marry: rgb(176, 142, 188);
+        --bili: brown;
+        --ahmad: rgb(164, 13, 111);
+      }
+      * {
+        margin: 1% auto;
+        padding: 0%;
+      }
+      nav {
+        display: flex;
+        background-color: var(--hajra);
+        padding: 4px;
+        justify-content: center;
+      }
+      nav a {
+        color: var(--maryam);
+        margin: 5px auto;
+        margin-top: 0.5px;
+        margin-bottom: 0.5px;
+        padding: 4px;
+        text-decoration: none;
+        background-color: var(--marry);
+        border: 1px solid var(--bili);
+        border-radius: 50px;
+        width: 70px;
+        text-align: center;
+        display: inline-block;
+      }
+      nav a:hover {
+        background-color: var(--azku);
+      }
+      a:visited {
+        color: var(--bilal);
+      }
+      body {
+        background-color: var(--harry);
+      }
+      .flexdiv {
+        margin: 6px;
+        padding: 5px;
+        border: 1px;
+        width: 70vw;
+        text-align: center;
+        border-radius: 80px;
+        background-color: var(--azkah);
+      }
+      h1 {
+        color: var(--ahmad);
+      }
+
+      /* Card CSS */
+
+      .box {
+        background-color: white;
+        border: 0.5px solid black;
+        padding: 5px;
+        border-radius: 10px;
+        width: 30vw;
+        margin: 4px;
+        height: auto;
+      }
+      .image {
+        margin-bottom: 10px;
+      }
+      .image img {
+        border-radius: 10px;
+      }
+      span {
+        border: 1px solid black;
+        border-radius: 55px;
+        text-align: center;
+        padding: 0px 6px;
+        margin: 4px;
+      }
+      .ancher {
+        border: none;
+        border-radius: 55px;
+        padding: 3px 20px;
+        text-align: center;
+        background-color: rgb(210, 242, 252);
+      }
+      .ancher a {
+        text-decoration: none;
+        font-size: 12px;
+        text-align: center;
+        color: rgb(64, 64, 235);
+        cursor: pointer;
+      }
+      .ancher a:hover {
+        background-color: burlywood;
+      }
+      .readmore {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      main {
+        background-color: rgb(222, 235, 247);
+        display: flex;
+        padding: 5px;
+      }
+      .para {
+        padding: 3px;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+      }
+      .para p {
+        color: gray;
+        margin-top: 1px;
+      }
+      .para h2 {
+        margin-bottom: 0px;
+      }
+
+      /* footer CSS */
+      .footer {
+        display: flex;
+        justify-content: center;
+        background-color: var(--hajra);
+        padding: 4px;
+      }
+
+      /* Position CSS */
+
+      .box1 {
+        background-color: aqua;
+        position: relative;
+        /* z-index: 12; */
+        top: 0px;
+      }
+      .box2 {
+        background-color: greenyellow;
+        position: relative;
+        bottom: 14px;
+        left: 48px;
+      }
+      .box3 {
+        background-color: bisque;
+        position: relative;
+        bottom: 28px;
+        left: 98px;
+      }
+      .box4 {
+        background-color: beige;
+        position: relative;
+        bottom: 46px;
+        left: 140px;
+      }
+      .box5 {
+        background-color: rgb(94, 92, 222);
+        position: relative;
+        bottom: 58px;
+        left: 200px;
+      }
+
+      .boxx {
+        height: 20px;
+        width: 30vw;
+        border: 1px solid black;
+        margin: 1px;
+        padding: 3px;
+      }
+      .parent {
+        padding: 5px;
+        margin: 4px;
+        border: 3px solid purple;
+        /* filter: invert(); */
+      }
+    </style>
+  </head>
+  <!-- HTML STARTS HEREs -->
+  <body>
+    <!-- Flex htmls -->
+    <header>
+      <h1>Lucifer Fast Food</h1>
+      <nav>
+        <div class="flexdiv">
+          <a href="/bookmarkmanager.html">Home</a>
+          <a href="/position.html">About</a>
+          <a href="/fonts.html">Services</a>
+          <a href="/exercise2.html">Contact</a>
+          <a href="/exercise3.html">Harry</a>
+          <a href="/index3.html">Fonts</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- card htmls -->
+    <main>
+      <div class="box">
+        <div class="image">
+          <img src="/Biscuits.jpg" width="263vw" alt="CardImage" />
+        </div>
+        <span>Cookies</span>
+        <span> Chocolate </span>
+        <div class="para">
+          <h2>Prince Biscuits</h2>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
+            earum delectus asperiores mollitia quasi! Odio dolorum dolorem
+            blanditiis recusandae commodi autem at quas!
+          </p>
+        </div>
+        <div class="readmore">
+          <span class="ancher">
+            <a href="/readmore.html">Read More</a>
+          </span>
+        </div>
+      </div>
+      <!-- 2nd Card htmls -->
+
+      <div class="box">
+        <div class="image">
+          <img src="/Fanta Chips.jpg" width="263vw" alt="CardImage" />
+        </div>
+        <span>Chips</span>
+        <span>Fanta</span>
+        <div class="para">
+          <h2>Fanta with Lays</h2>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
+            earum delectus asperiores mollitia quasi! Odio dolorum dolorem
+            blanditiis recusandae commodi autem at quas!
+          </p>
+        </div>
+        <div class="readmore">
+          <span class="ancher">
+            <a href="/readmore.html">Read More</a>
+          </span>
+        </div>
+      </div>
+
+      <!-- 3rd Card htmls -->
+
+      <div class="box">
+        <div class="image">
+          <img src="/CoCaCola.jpg" width="263vw" alt="CardImage" />
+        </div>
+        <span> CocaCola </span>
+        <span>Dinner </span>
+        <div class="para">
+          <h2>CocaCola</h2>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
+            earum delectus asperiores mollitia quasi! Odio dolorum dolorem
+            blanditiis recusandae commodi autem at quas!
+          </p>
+        </div>
+        <div class="readmore">
+          <span class="ancher">
+            <a href="/readmore.html">Read More</a>
+          </span>
+        </div>
+      </div>
+    </main>
+
+    <!-- video and positions -->
+    <video src="/pizzavideo.mp4" controls height="400px">PizaaVideo</video>
+
+    <img src="/pizza1.jpg" height="400" alt="PizzaImage" />
+    <div>
+      <div class="parent">
+        <div class="boxx box1">Harry</div>
+        <div class="boxx box2">Marry</div>
+        <div class="boxx box3">Lali</div>
+        <div class="boxx box4">Ahmed</div>
+        <div class="boxx box5">Azkooo</div>
+      </div>
+    </div>
+    <video src="/pizzavideo.mp4" controls height="400">PizzaVideo</video>
+    <img src="/pizza2.jpg" height="400" alt="PizzaImage" />
+
+    <!-- Boundry Details Forms -->
+
+    <p>
+      We are offering
+      <strong><em>High quality Fast Food</em></strong>
+      .Please enter your details:
+    </p>
+
+    <form action="post">
+      <div>
+        <label for="username">Enter your username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Enter your username"
+        />
+      </div>
+
+      <div>
+        <input type="radio" id="male" name="gender" value="male" />
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="female" />
+        <label for="female">Female</label>
+      </div>
+      <div>
+        <input type="checkbox" id="subscribe" name="subscribe" value="yes" />
+        <label for="subscribe">Subscribe to Lucifer Fast Food</label>
+      </div>
+      <div>
+        <label for="comment">Enter your comment</label>
+        <textarea id="comment" name="comment" rows="4" cols="50">
+Enter your comment here</textarea
+        >
+      </div>
+      <div>
+        <select name="Fast Food" id="">
+          <option value="Pizza">Pizza</option>
+          <option value="Burger">Burger</option>
+          <option value="Nudgets">Nudgets</option>
+        </select>
+      </div>
+      <h3>Basic Details</h3>
+      <div>
+        <label for="username">Enter your username</label>
+        <input type="text" id="username" placeholder="Usernameeeee" />
+      </div>
+      <div>
+        <label for="city">Enter your residence city</label>
+        <input type="text" id="city" placeholder="your home city" />
+      </div>
+      <div>
+        <label for="pincode">Enter your Pin code</label>
+        <input type="text" id="pincode" placeholder="Pin code" />
+      </div>
+    </form>
+
+    <!-- footer htmls -->
+    <footer>
+      <nav>
+        <div class="footer">© 2024 Herry Website</div>
+        <div>Contact me on <a href="//https:gmail.com">Gmail</a>
+        </div>
+      </nav>
+    </footer>
+  </body>
+</html>
