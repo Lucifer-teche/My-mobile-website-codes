@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Multiverse</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    overflow: hidden;
+    height: 100vh;
+    background: radial-gradient(circle at center, #000010 20%, #000 100%);
+    cursor: url('https://raw.githubusercontent.com/Lucifer-teche/Rocket-cursor-img/main/Normal.cur'), auto;
+}
+
+button, a, #soundControl, canvas { cursor: url('https://raw.githubusercontent.com/Lucifer-teche/Rocket-cursor-img/main/Normal.cur'), auto !important; }
+
+#webGLContainer { width: 100%; height: 100%; }
+
+#soundControl {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #00ffff 0%, #0044ff 70%);
+    box-shadow: 0 0 15px #00ffff;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4s ease;
+    z-index: 10;
+}
+#soundControl:hover { box-shadow: 0 0 30px #00ffff; transform: scale(1.1); }
+#soundControl .icon { position: relative; width: 22px; height: 20px; }
+.speaker { width: 8px; height: 12px; background: white; position: absolute; left: 0; top: 4px; border-radius: 2px; }
+.waves { position: absolute; right: 0; top: 4px; width: 8px; height: 12px; border-right: 2px solid white; border-top: 2px solid white; border-bottom: 2px solid white; border-radius: 50%; transform: rotate(-45deg); animation: wavePulse 1s infinite ease-in-out; }
+@keyframes wavePulse { 0%,100%{opacity:0.6;transform:scale(1) rotate(-45deg);} 50%{opacity:1;transform:scale(1.2) rotate(-45deg);} }
+.sound-off .waves { display: none; }
+.sound-off { background: radial-gradient(circle at center, #444 0%, #111 70%); box-shadow: 0 0 10px #222; }
+.sound-on::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    animation: pulseGlow 2s infinite;
+    top: 0; left: 0;
+    pointer-events: none;
+}
+@keyframes pulseGlow { 0%{box-shadow:0 0 10px 2px rgba(0,255,255,0.6);}50%{box-shadow:0 0 25px 6px rgba(0,255,255,0.9);}100%{box-shadow:0 0 10px 2px rgba(0,255,255,0.6);} }
+
+.cursor-trail {
+    position: fixed;
+    pointer-events: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(0, 255, 255, 0.6);
+    mix-blend-mode: screen;
+    z-index: 9999;
+}
+
+#backButton {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    padding: 10px 20px;
+    background: #00ffff;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    z-index: 10;
+}
+#backButton:hover { background: #00ddff; }
+</style>
+</head>
+<body>
+<div id="webGLContainer"></div>
+
+<audio id="bgMusic" src="https://cdn.pixabay.com/audio/2023/04/23/audio_9efbc4cce2.mp3" loop></audio>
+<audio id="hoverSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_44615b3f2f.mp3?filename=woosh-2-6466.mp3" preload="auto"></audio>
+
+<div id="soundControl" class="sound-off" title="Unmute Sound">
+    <div class="icon">
+        <div class="speaker"></div>
+        <div class="waves"></div>
+    </div>
+</div>
+
+<button id="backButton">Back to Multiverse</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+
+<script>
+// ------------------ Scene Setup ------------------
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
+camera.position.z = 100;
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000,1);
+document.getElementById('webGLContainer').appendChild(renderer.domElement);
+
+const ambientLight = new THREE.AmbientLight(0x444444);
+scene.add(ambientLight);
+const pointLight = new THREE.PointLight(0xffffff,2,1000);
+scene.add(pointLight);
+
+// ------------------ Stars ------------------
+const starCount = 8000;
+const starGeometry = new THREE.BufferGeometry();
+const starPositions = new Float32Array(starCount*3);
+const starColors = new Float32Array(starCount*3);
+for(let i=0;i<starCount;i++){
+    starPositions[i*3] = (Math.random()-0.5)*4000;
+    starPositions[i*3+1] = (Math.random()-0.5)*4000;
+    starPositions[i*3+2] = (Math.random()-0.5)*4000;
+    const rand = Math.random();
+    if(rand<0.7){ starColors[i*3]=1; starColors[i*3+1]=1; starColors[i*3+2]=0.9; }
+    else if(rand<0.85){ starColors[i*3]=0.5; starColors[i*3+1]=0.7; starColors[i*3+2]=1; }
+    else{ starColors[i*3]=1; starColors[i*3+1]=0.4; starColors[i*3+2]=0.7; }
+}
+starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions,3));
+starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors,3));
+const stars = new THREE.Points(starGeometry, new THREE.PointsMaterial({vertexColors:true,size:1}));
+scene.add(stars);
+
+// ------------------ Core ------------------
+const core = new THREE.Mesh(new THREE.SphereGeometry(3,64,64), new THREE.MeshBasicMaterial({color:0x00ffff}));
+scene.add(core);
+const glow = new THREE.Mesh(new THREE.SphereGeometry(4,64,64), new THREE.MeshBasicMaterial({color:0x00ffff,transparent:true,opacity:0.2}));
+scene.add(glow);
+
+// ------------------ Universes ------------------
+function createUniverse(x,y,z,color,galaxyType){
+    const group = new THREE.Group();
+    const core = new THREE.Mesh(new THREE.SphereGeometry(2,32,32), new THREE.MeshPhongMaterial({color,emissive:color,emissiveIntensity:0.3}));
+    core.userData = {baseColor: color, galaxyType};
+    group.add(core);
+
+    for(let i=0;i<4;i++){
+        let planetColor;
+        if(galaxyType==="milky"){
+            const type=Math.random();
+            if(type<0.2) planetColor=0x2e8b57;
+            else if(type<0.4) planetColor=0xd2b48c;
+            else if(type<0.6) planetColor=0x1e90ff;
+            else if(type<0.8) planetColor=0xffffff;
+            else planetColor=0xff4500;
+        } else { planetColor = Math.random()*0xffffff; }
+
+        const planet = new THREE.Mesh(new THREE.SphereGeometry(0.5+Math.random()*0.5,32,32),
+            new THREE.MeshPhongMaterial({color:planetColor,emissive:planetColor*0.2,emissiveIntensity:0.1}));
+        planet.userData = {
+            orbitRadius:3+i*2,
+            angle:Math.random()*Math.PI*2,
+            speed:0.002+Math.random()*0.002
+        };
+        planet.position.x = Math.cos(planet.userData.angle)*planet.userData.orbitRadius;
+        planet.position.z = Math.sin(planet.userData.angle)*planet.userData.orbitRadius;
+        group.add(planet);
+    }
+
+    group.position.set(x,y,z);
+    return group;
+}
+
+const universes = [
+    createUniverse(0,0,0,0xffffaa,"milky"),
+    createUniverse(50,0,-50,0xff88ff,"exotic"),
+    createUniverse(-50,10,-60,0x88ff88,"exotic"),
+    createUniverse(0,-30,40,0x8888ff,"exotic")
+];
+universes.forEach(u=>scene.add(u));
+
+function addAsteroidBelt(planet,radius){
+    const belt = new THREE.Group();
+    for(let i=0;i<200;i++){
+        const rock = new THREE.Mesh(
+            new THREE.SphereGeometry(Math.random()*0.05+0.02,8,8),
+            new THREE.MeshPhongMaterial({color:0x888888})
+        );
+        const angle=Math.random()*Math.PI*2;
+        const dist = radius+Math.random()*0.3;
+        rock.position.set(Math.cos(angle)*dist,(Math.random()-0.5)*0.1,Math.sin(angle)*dist);
+        belt.add(rock);
+    }
+    planet.add(belt);
+}
+
+function addGasCloud(universe){
+    const cloudGeo = new THREE.SphereGeometry(5+Math.random()*5,32,32);
+    const cloudMat = new THREE.MeshPhongMaterial({
+        color:0xff33aa + Math.random()*0x00ffff,
+        transparent:true,
+        opacity:0.2,
+        side: THREE.DoubleSide
+    });
+    const cloud = new THREE.Mesh(cloudGeo, cloudMat);
+    cloud.position.set((Math.random()-0.5)*10,(Math.random()-0.5)*10,(Math.random()-0.5)*10);
+    universe.add(cloud);
+}
+
+universes.forEach((u,i)=>{
+    if(i>0) addGasCloud(u);
+    u.children.forEach(obj=>{
+        if(obj.geometry instanceof THREE.SphereGeometry && obj.geometry.parameters.radius<1.5){
+            addAsteroidBelt(obj, obj.geometry.parameters.radius+0.5);
+        }
+    });
+});
+
+// ------------------ Raycaster / Hover ------------------
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let INTERSECTED = null;
+
+window.addEventListener('mousemove', e=>{
+    mouse.x = (e.clientX / window.innerWidth)*2-1;
+    mouse.y = -(e.clientY / window.innerHeight)*2+1;
+});
+
+// ------------------ Back Button ------------------
+const backButton = document.getElementById('backButton');
+let inUniverse = false;
+let animatingCamera = false;
+
+backButton.addEventListener('click', ()=>{
+    if(!inUniverse) return;
+    inUniverse = false;
+    backButton.style.display = "none";
+
+    if(INTERSECTED){
+        gsap.to(INTERSECTED.scale,{x:1,y:1,z:1,duration:0.3});
+        INTERSECTED.material.emissiveIntensity = 0;
+        INTERSECTED = null;
+    }
+
+    const startPos = {x:camera.position.x,y:camera.position.y,z:camera.position.z};
+    const endPos = {x:0,y:0,z:100};
+    animatingCamera = true;
+    gsap.to(startPos,{
+        x:endPos.x,y:endPos.y,z:endPos.z,duration:2,ease:"power2.inOut",
+        onUpdate:()=>{ camera.position.set(startPos.x,startPos.y,startPos.z); camera.lookAt(scene.position); },
+        onComplete: ()=>{ animatingCamera = false; }
+    });
+});
+
+// ------------------ Universe Entry ------------------
+function enterUniverse(universe){
+    inUniverse = true;
+    backButton.style.display = "block";
+
+    const target = universe.position;
+    const startPos = {x:camera.position.x,y:camera.position.y,z:camera.position.z};
+    const endPos = {x:target.x,y:target.y,z:target.z+10};
+
+    animatingCamera = true;
+    gsap.to(startPos,{
+        x:endPos.x,y:endPos.y,z:endPos.z,duration:2,ease:"power2.inOut",
+        onUpdate:()=>{ camera.position.set(startPos.x,startPos.y,startPos.z); camera.lookAt(target); },
+        onComplete: ()=>{ animatingCamera = false; }
+    });
+}
+
+// ------------------ Mouse Click ------------------
+window.addEventListener('click', ()=>{
+    if(INTERSECTED && !inUniverse){
+        enterUniverse(INTERSECTED.parent);
+    }
+});
+
+// ------------------ Sound Control ------------------
+const bgMusic = document.getElementById('bgMusic');
+const hoverSound = document.getElementById('hoverSound');
+const soundControl = document.getElementById('soundControl');
+let soundOn = false;
+
+soundControl.addEventListener('click', ()=>{
+    soundOn = !soundOn;
+    if(soundOn){
+        bgMusic.play();
+        soundControl.classList.remove('sound-off'); soundControl.classList.add('sound-on');
+    } else{
+        bgMusic.pause();
+        soundControl.classList.remove('sound-on'); soundControl.classList.add('sound-off');
+    }
+});
+
+// ------------------ Animate Loop ------------------
+function animate(){
+    requestAnimationFrame(animate);
+
+    // Animate stars
+    stars.rotation.y += 0.0002;
+
+    // Animate universes
+    universes.forEach(u=>{
+        u.children.forEach(obj=>{
+            if(obj.userData.orbitRadius){
+                obj.userData.angle += obj.userData.speed;
+                obj.position.x = Math.cos(obj.userData.angle)*obj.userData.orbitRadius;
+                obj.position.z = Math.sin(obj.userData.angle)*obj.userData.orbitRadius;
+            }
+        });
+    });
+
+    // Raycasting hover
+    if(!inUniverse){
+        raycaster.setFromCamera(mouse,camera);
+        const intersects = raycaster.intersectObjects(universes.map(u=>u.children[0]));
+
+        if(intersects.length>0){
+            if(INTERSECTED!=intersects[0].object){
+                if(INTERSECTED){
+                    gsap.to(INTERSECTED.scale,{x:1,y:1,z:1,duration:0.3});
+                    INTERSECTED.material.emissiveIntensity = 0;
+                }
+                INTERSECTED = intersects[0].object;
+                gsap.to(INTERSECTED.scale,{x:1.3,y:1.3,z:1.3,duration:0.3});
+                INTERSECTED.material.emissiveIntensity = 0.5;
+                if(soundOn){ hoverSound.currentTime = 0; hoverSound.play(); }
+            }
+        } else {
+            if(INTERSECTED){
+                gsap.to(INTERSECTED.scale,{x:1,y:1,z:1,duration:0.3});
+                INTERSECTED.material.emissiveIntensity = 0;
+            }
+            INTERSECTED = null;
+        }
+    }
+
+    // Camera follow mouse when not in universe and not animating
+    if(!inUniverse && !animatingCamera){
+        const mouseX = (mouse.x) * 0.5;
+        const mouseY = (mouse.y) * 0.5;
+        camera.position.x += (mouseX*20 - camera.position.x)*0.05;
+        camera.position.y += (mouseY*20 - camera.position.y)*0.05;
+        camera.lookAt(scene.position);
+    }
+
+    renderer.render(scene,camera);
+}
+animate();
+
+window.addEventListener('resize',()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+});
+</script>
+</body>
+</html>

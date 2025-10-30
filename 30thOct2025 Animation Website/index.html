@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiverse</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="webGLContainer"></div>
+
+  <!-- 🎶 Ambient Space Music -->
+  <audio id="bgMusic" src="https://cdn.pixabay.com/audio/2023/04/23/audio_9efbc4cce2.mp3" loop></audio>
+
+  <!-- 💨 Hover Whoosh Sound -->
+  <audio id="hoverSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_44615b3f2f.mp3?filename=woosh-2-6466.mp3" preload="auto"></audio>
+
+  <!-- 🎵 Sound Control -->
+  <div id="soundControl" class="sound-off" title="Unmute Sound">
+    <div class="icon">
+      <div class="speaker"></div>
+      <div class="waves"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

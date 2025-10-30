@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiverse Explorer</title>
+  <style>
+    /* ======= CSS from styles.css ======= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      overflow: hidden;
+      height: 100vh;
+      background: radial-gradient(circle at center, #000010 20%, #000 100%);
+      cursor: url('https://raw.githubusercontent.com/Lucifer-teche/Rocket-cursor-img/main/Normal.cur'), auto;
+    }
+    button, a, #soundControl, canvas {
+      cursor: url('https://raw.githubusercontent.com/Lucifer-teche/Rocket-cursor-img/main/Normal.cur'), auto !important;
+    }
+    #webGLContainer { width: 100%; height: 100%; }
+
+    /* 🎵 Sound Control */
+    #soundControl {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #00ffff 0%, #0044ff 70%);
+      box-shadow: 0 0 15px #00ffff;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.4s ease;
+      z-index: 10;
+    }
+    #soundControl:hover { box-shadow: 0 0 30px #00ffff; transform: scale(1.1); }
+    #soundControl .icon { position: relative; width: 22px; height: 20px; }
+    .speaker { width: 8px; height: 12px; background: white; position: absolute; left: 0; top: 4px; border-radius: 2px; }
+    .waves {
+      position: absolute; right: 0; top: 4px; width: 8px; height: 12px;
+      border-right: 2px solid white; border-top: 2px solid white; border-bottom: 2px solid white;
+      border-radius: 50%; transform: rotate(-45deg); animation: wavePulse 1s infinite ease-in-out;
+    }
+    @keyframes wavePulse {
+      0%, 100% { opacity: 0.6; transform: scale(1) rotate(-45deg); }
+      50% { opacity: 1; transform: scale(1.2) rotate(-45deg); }
+    }
+    .sound-off .waves { display: none; }
+    .sound-off {
+      background: radial-gradient(circle at center, #444 0%, #111 70%);
+      box-shadow: 0 0 10px #222;
+    }
+    .sound-on::after {
+      content: ""; position: absolute; border-radius: 50%; width: 100%; height: 100%;
+      animation: pulseGlow 2s infinite; top: 0; left: 0; pointer-events: none;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 10px 2px rgba(0,255,255,0.6); }
+      50% { box-shadow: 0 0 25px 6px rgba(0,255,255,0.9); }
+      100% { box-shadow: 0 0 10px 2px rgba(0,255,255,0.6); }
+    }
+    .cursor-trail {
+      position: fixed; pointer-events: none; width: 10px; height: 10px;
+      border-radius: 50%; background: rgba(0,255,255,0.6); mix-blend-mode: screen; z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <div id="webGLContainer"></div>
+
+  <!-- 🎶 Audio -->
+  <audio id="bgMusic" src="https://cdn.pixabay.com/audio/2023/04/23/audio_9efbc4cce2.mp3" loop></audio>
+  <audio id="hoverSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_44615b3f2f.mp3?filename=woosh-2-6466.mp3" preload="auto"></audio>
+
+  <!-- 🎵 Sound Control -->
+  <div id="soundControl" class="sound-off" title="Unmute Sound">
+    <div class="icon">
+      <div class="speaker"></div>
+      <div class="waves"></div>
+    </div>
+  </div>
+
+  <!-- ======= JS ======= -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+  <script>
+    // 🌌 Scene Setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 5000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 1);
+    document.getElementById('webGLContainer').appendChild(renderer.domElement);
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0x444444); scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 2, 5000); scene.add(pointLight);
+
+    // 🌠 Starfield
+    const starCount = 8000;
+    const starGeometry = new THREE.BufferGeometry();
+    const starPositions = new Float32Array(starCount * 3);
+    for (let i=0;i<starCount;i++){
+      starPositions[i*3]=(Math.random()-0.5)*4000;
+      starPositions[i*3+1]=(Math.random()-0.5)*4000;
+      starPositions[i*3+2]=(Math.random()-0.5)*4000;
+    }
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions,3));
+    const stars = new THREE.Points(starGeometry,new THREE.PointsMaterial({color:0xffffff,size:1}));
+    scene.add(stars);
+
+    // 🪐 Create Universes
+    function createUniverse(x,y,z,color,galaxyColors){
+      const universe = new THREE.Group(); universe.position.set(x,y,z);
+
+      const core = new THREE.Mesh(new THREE.SphereGeometry(5,64,64), 
+        new THREE.MeshPhongMaterial({color,emissive:color,emissiveIntensity:0.7}));
+      core.userData={baseColor:color};
+      universe.add(core);
+
+      galaxyColors.forEach(gColor=>{
+        const galaxy = new THREE.Group();
+        const gCore = new THREE.Mesh(new THREE.SphereGeometry(2,32,32), 
+          new THREE.MeshPhongMaterial({color:gColor,emissive:gColor,emissiveIntensity:0.5}));
+        galaxy.add(gCore);
+
+        for(let i=0;i<5;i++){
+          const planet=new THREE.Mesh(new THREE.SphereGeometry(Math.random()*0.6+0.3,32,32),
+            new THREE.MeshPhongMaterial({color:randomPlanetColor()}));
+          planet.userData={orbitRadius:4+Math.random()*3,angle:Math.random()*Math.PI*2,speed:0.005+Math.random()*0.01};
+          galaxy.add(planet);
+        }
+
+        galaxy.position.set(Math.random()*15-7,Math.random()*15-7,Math.random()*15-7);
+        universe.add(galaxy);
+      });
+
+      scene.add(universe); return universe;
+    }
+
+    function randomPlanetColor(){
+      const colors=[0x1f77b4,0xd62728,0x2ca02c,0xffc107,0xaaaaaa,0xadd8e6];
+      return colors[Math.floor(Math.random()*colors.length)];
+    }
+
+    const universes=[
+      createUniverse(-60,0,-200,0x00ffff,[0xffdd33,0x33ffdd,0xdd33ff]),
+      createUniverse(60,0,-250,0xff33aa,[0x33ff33,0xff3333,0x3333ff]),
+      createUniverse(0,60,-220,0x33aaff,[0xffaa33,0xaa33ff,0x33ffaa]),
+      createUniverse(0,-60,-180,0xffaa00,[0x33ffff,0xff33ff,0xffff33]),
+    ];
+
+    camera.position.z=50;
+
+    // 🖱️ Mouse Motion
+    let mouseX=0, mouseY=0, hoveredObj=null, activeUniverse=null;
+    const mouse=new THREE.Vector2(), raycaster=new THREE.Raycaster();
+    document.addEventListener('mousemove',e=>{
+      mouseX=(e.clientX/window.innerWidth)*2-1;
+      mouseY=-(e.clientY/window.innerHeight)*2+1;
+      mouse.x=mouseX; mouse.y=mouseY;
+    });
+
+    // 🎵 Audio
+    const bgMusic=document.getElementById("bgMusic");
+    const hoverSound=document.getElementById("hoverSound");
+    const soundControl=document.getElementById("soundControl");
+    let soundEnabled=false, musicStarted=false;
+
+    soundControl.addEventListener("click",()=>{
+      soundEnabled=!soundEnabled;
+      if(soundEnabled){
+        soundControl.classList.add("sound-on"); soundControl.classList.remove("sound-off"); soundControl.title="Mute Sound";
+        startMusic();
+      } else {
+        soundControl.classList.remove("sound-on"); soundControl.classList.add("sound-off"); soundControl.title="Unmute Sound";
+        gsap.to(bgMusic,{volume:0,duration:1.5});
+      }
+    });
+
+    function startMusic(){
+      if(!musicStarted){
+        musicStarted=true; bgMusic.volume=0; bgMusic.play().catch(()=>{});
+        gsap.to(bgMusic,{volume:0.5,duration:3});
+      } else { gsap.to(bgMusic,{volume:0.5,duration:1.5}); }
+    }
+
+    // 🌌 Animate & Interactivity
+    document.addEventListener('click',()=>{
+      if(hoveredObj && hoveredObj.parent && universes.includes(hoveredObj.parent)){
+        activeUniverse=hoveredObj.parent;
+        gsap.to(camera.position,{
+          x:activeUniverse.position.x,
+          y:activeUniverse.position.y,
+          z:activeUniverse.position.z+20,
+          duration:2, ease:"power2.inOut"
+        });
+      }
+    });
+
+    function animate(){
+      requestAnimationFrame(animate);
+
+      universes.forEach(u=>u.rotation.y+=0.001);
+
+      universes.forEach(u=>{
+        u.children.forEach(g=>{
+          if(g.children){
+            g.children.forEach(o=>{
+              if(o.userData.orbitRadius){
+                o.userData.angle+=o.userData.speed;
+                o.position.x=Math.cos(o.userData.angle)*o.userData.orbitRadius;
+                o.position.z=Math.sin(o.userData.angle)*o.userData.orbitRadius;
+              }
+            });
+          }
+        });
+      });
+
+      raycaster.setFromCamera(mouse,camera);
+      const intersects=raycaster.intersectObjects(universes,true);
+      if(intersects.length>0){
+        if(hoveredObj!==intersects[0].object){ hoveredObj=intersects[0].object; if(soundEnabled) hoverSound.play(); }
+      } else hoveredObj=null;
+
+      renderer.render(scene,camera);
+    }
+    animate();
+
+    window.addEventListener('resize',()=>{
+      camera.aspect=window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth,window.innerHeight);
+    });
+  </script>
+</body>
+</html>

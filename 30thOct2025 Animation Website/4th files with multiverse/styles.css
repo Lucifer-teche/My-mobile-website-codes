@@ -1,0 +1,119 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    overflow: hidden;
+    height: 100vh;
+    background: radial-gradient(circle at center, #000010 20%, #000 100%);
+    cursor: url('https://raw.githubusercontent.com/Lucifer-teche/Rocket-cursor-img/main/Normal.cur'), auto;
+  }
+  
+  button, a, #soundControl, canvas {
+    cursor: url('https://raw.githubusercontent.com/Lucifer-teche/Rocket-cursor-img/main/Normal.cur'), auto !important;
+  }
+  
+  #webGLContainer {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* 🎵 Sound Control */
+  #soundControl {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #00ffff 0%, #0044ff 70%);
+    box-shadow: 0 0 15px #00ffff;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4s ease;
+    z-index: 10;
+  }
+  
+  #soundControl:hover {
+    box-shadow: 0 0 30px #00ffff;
+    transform: scale(1.1);
+  }
+  
+  #soundControl .icon {
+    position: relative;
+    width: 22px;
+    height: 20px;
+  }
+  
+  .speaker {
+    width: 8px;
+    height: 12px;
+    background: white;
+    position: absolute;
+    left: 0;
+    top: 4px;
+    border-radius: 2px;
+  }
+  
+  .waves {
+    position: absolute;
+    right: 0;
+    top: 4px;
+    width: 8px;
+    height: 12px;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    border-radius: 50%;
+    transform: rotate(-45deg);
+    animation: wavePulse 1s infinite ease-in-out;
+  }
+  
+  @keyframes wavePulse {
+    0%, 100% { opacity: 0.6; transform: scale(1) rotate(-45deg); }
+    50% { opacity: 1; transform: scale(1.2) rotate(-45deg); }
+  }
+  
+  .sound-off .waves {
+    display: none;
+  }
+  .sound-off {
+    background: radial-gradient(circle at center, #444 0%, #111 70%);
+    box-shadow: 0 0 10px #222;
+  }
+  
+  /* 🌟 Pulse glow when on */
+  .sound-on::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    animation: pulseGlow 2s infinite;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+  
+  @keyframes pulseGlow {
+    0% { box-shadow: 0 0 10px 2px rgba(0, 255, 255, 0.6); }
+    50% { box-shadow: 0 0 25px 6px rgba(0, 255, 255, 0.9); }
+    100% { box-shadow: 0 0 10px 2px rgba(0, 255, 255, 0.6); }
+  }
+  
+  /* ✨ Cursor Trail */
+  .cursor-trail {
+    position: fixed;
+    pointer-events: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(0, 255, 255, 0.6);
+    mix-blend-mode: screen;
+    z-index: 9999;
+  }
+  
